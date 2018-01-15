@@ -13,6 +13,15 @@ For the solarhome benchmark, I've selected year 2011-2012 for "Customer 12" (out
 * No Controlled Load ("CL"), only General Consumption ("GC" channel), that is uncontrolled load.
 * Consumption and solar production statistics close to the average of the 300 customers (cf. [Customer exploration.ipynb](https://github.com/pierre-haessig/ausgrid-solar-data/blob/master/Customer%20exploration.ipynb) notebook)
 
+## How to load this data
+
+You can take a look in the subfolders for your language of choice.
+Loading scripts are currently provided for:
+
+* [Matlab](matlab) (should work with Octave by adjusting the call to `csvread`)
+
+You can also look inside the folder of each [control methods](../methods).
+
 ## Data description
 
 Global statistics:
