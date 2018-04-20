@@ -27,7 +27,9 @@ You can also look inside the folder of each [control methods](../methods).
 Global statistics:
 
 * Consumption: avg 0.7 kW, max 4.0 kW. Yearly total of 5 900 kWh/yr
-* PV max 0.9 kW (1.04 kW capacity). Yield of 1250 kWh/yr/kWc
+* PV max 0.9 kW (1.04 kW capacity\*). Yield of 1250 kWh/yr/kWc.
+
+\*Notice: for the benchmark, the PV capacity is upscaled to 3 kWp by applying a 3/1.04 scaling factor.
 
 Here is the daily pattern (mean, 25%-75% and 05%-95% quantile intervals, at each hour of the day) for load and production over the year:
 
@@ -51,7 +53,7 @@ It contains 1 year of home consumption and solar production with following colum
 2. GC "General Consumption": home consumption
 3. GG "Gross Generation": solar production
 
-### Additional data files
+### Alternative data files
 
 In order to help some data analysis, a *pivoted table* of the same data is provided, where days are mapped to rows and hour of the day to columns:
 
@@ -65,12 +67,34 @@ date,0.0,0.5,...,23.0,23.5
 2012-06-30,0.354,0.332,...,0.374,0.454
 ```
 
-## Test week for the benchmark
+## Test period for the benchmark
 
-For the solar home energy management benchmark, I've selected 7 days starting on 2011-11-29.
-This period contains some very shiny days but also some rather cloudy days:
+For the solar home energy management benchmark, we've selected 30+3 days starting on 2011-11-29 until the end of the year:
+
+*  Benchmark results should be computed on the **first 30 days**
+* The 3 extra days are only provided as a boundary condition for optimization methods that would need some extra look-ahead (e.g. anticipative MPC or anticipative deterministic optimization).
+
+This period (summer in Autralia) contains some very shiny days but also some rather cloudy days. Here is the first week.
 
 ![2011-11-29 week plot](data_week_2011-11-29.png)
+
+### Bootstrapped test data
+
+In addition to the real test time seris, we provide 400 additional bootstrapped samples of this test data  in `test-data_2011-11-29_33-days_bl-3_bs-400.csv`.
+It has a format very similar to main data file, but with 400× more columns, and with dates only covering the test period:
+
+```
+,GC0,GG0,GC1,GG1,...,GC399,GG399
+2011-11-29 00:00:00,0.468,0,...
+2011-12-31 23:30:00,0.54,0,...
+```
+
+The bootstrap method which generates this file (a block bootstrap, which takes into account ) is in the
+[data_variability_bootstrap.ipynb](data_variability_bootstrap.ipynb) notebook.
+
+The bootstrapped test samples can be used to **estimate the variability of the benchmark results**. As an illustration, this is the variability of the daily energy  averaged over the 33 days (for the load, the sun power and the net load):
+
+![Variability of the daily energy averaged over the 33 days](Variability plots/var_daily_ener_d33.png)
 
 ### Forecasting
 
@@ -79,6 +103,8 @@ Energy management methods based on forecasts (or any sort data  modeling) **shou
 In particular the 30 preceding days are a good starting point:
 
 ![daily trajectories for month before 2011-11-28 ](daily_traj_M-1-2011-11-28.png)
+
+This past data can be used to create scenarios for a stochastic MPC for example.
 
 ### Basic forecast data
 
@@ -97,8 +123,6 @@ mean, min, max and all the quantiles with a 5% step:
 ...
 23.5,0.572,0.326,0.377,...,0.970,1.30
 ```
-
-
 
 ![daily pattern statistics for month before 2011-11-28 ](daily_pattern_prod_M-1-2011-11-28.png)
 
@@ -119,4 +143,4 @@ on the other hand, the plot of the consumption shows that some consumption chang
 
 ![Heatmap plot of the home consumption during year 2011-2012 ](daily_pivot_cons_2011-2012.png)
 
-Because this time shifting complicates forecasting, I've selected a week of interest (+ the previous month for learning) which doesn't contain any DST change day.
+Because this time shifting complicates forecasting, we have selected a test period (+ the previous month for learning) which doesn't contain any DST change day.
