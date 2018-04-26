@@ -1,6 +1,8 @@
 % Simulation of the solar home using a simple rule-based control.
 % Pierre Haessig, April 2018
 
+path(path, '../../utils') % access to load_data and save_results
+
 %% Load test data: P_load, P_sun
 
 dat = load_data();
