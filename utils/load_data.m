@@ -30,7 +30,6 @@ data = csvread('../../data/data_2011-2012.csv', R1, 1, [R1 1 R2 2]);
 
 dat.P_load_sp = data(:,1);
 dat.P_sun_1k = data(:,2)/1.04;
-dat.P_sun = dat.P_sun_1k * dat.P_pvp;
 
 % time vector
 n = length(dat.P_sun_1k);
