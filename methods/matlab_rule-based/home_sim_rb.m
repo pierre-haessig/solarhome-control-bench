@@ -4,7 +4,7 @@ function [stats,traj] = home_sim_rb(dat)
 %   Outputs: stats and trajectories, as struct
 
 % extract input data and parameters:
-dt = dat.t(2) - dat.t(1);
+dt = dat.dt;
 E_rated = dat.E_rated;
 P_pvp = dat.P_pvp;
 P_load = dat.P_load_sp;
@@ -55,7 +55,7 @@ end
 % extra outputs
 E_sto = E_sto(1:end-1);
 P_pv = P_sun - P_curt;
-C_grid = P_grid .* c_grid * dt;
+C_grid = P_grid .* c_grid; % in €/h
 
 
 % output stats: cumulated energy in kWh/day
@@ -70,15 +70,15 @@ stats.P_pv   = mean(P_pv)*24;
 stats.P_grid = mean(P_grid)*24;
 stats.C_grid = mean(C_grid)*24;
 
-% trajectories of all output variables
+% trajectories of all variables (input, output and state)
 traj.E_sto  = E_sto; % state
 traj.P_sto  = P_sto; % out
 
-%traj.P_load_sp = P_load; % in
+traj.P_load_sp = P_load; % in
 traj.P_shed = P_shed; % out
 traj.P_load = P_load; % out
 
-%traj.P_sun  = P_sun; % in
+traj.P_sun  = P_sun; % in
 traj.P_curt = P_curt; % out
 traj.P_pv   = P_pv; % out
 

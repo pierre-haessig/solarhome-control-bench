@@ -48,8 +48,8 @@ fclose(f);
 
 res = [dat.t...
       traj.E_sto traj.P_sto... % storage
-      dat.P_load_sp traj.P_shed traj.P_load... % load
-      dat.P_sun traj.P_curt traj.P_pv... % sun
+      traj.P_load_sp traj.P_shed traj.P_load... % load
+      traj.P_sun traj.P_curt traj.P_pv... % sun
       traj.P_grid dat.c_grid]; % grid
 
 almost_0 = abs(res)<1e-15;
