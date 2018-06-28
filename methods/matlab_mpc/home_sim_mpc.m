@@ -1,13 +1,15 @@
 function [stats,traj] = home_sim_mpc(dat,horiz,anticip_var)
 %**************************************************************************
 %% HOME_SIM_MPC Simulate the solar home with MPC control
-%
-%   Inputs: 
+% Version: 1.1
+% Required functions: Help_consAorBineq()
+% Inputs: 
 %            dat: Data structure, from load_data;
 %            horiz : Prediction Horizon in hours 
 %            anticip_var : Set this variable to 1 in order to use the  real
 %            data or 0 to use the mean data for the prediction
-%   Outputs: stats and trajectories, as struct
+
+% Outputs: stats and trajectories, as struct
 % 
 %
 % Author Jesse - James PRINCE A. || May 2018 
