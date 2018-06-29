@@ -2,7 +2,7 @@ function [stats,traj] = home_sim_mpc(dat,horiz,anticip_var)
 %**************************************************************************
 %% HOME_SIM_MPC Simulate the solar home with MPC control
 % Version: 1.1
-% Required functions: Help_consAorBineq()
+% Required functions: reArrangeMat()
 % Inputs: 
 %            dat: Data structure, from load_data;
 %            horiz : Prediction Horizon in hours 
@@ -12,12 +12,12 @@ function [stats,traj] = home_sim_mpc(dat,horiz,anticip_var)
 % Outputs: stats and trajectories, as struct
 % 
 %
-% Author Jesse - James PRINCE A. || May 2018 
-%  ************************************************************************
+% Author : Jesse - James PRINCE A. || May 2018 
+%**************************************************************************
 
 dt = dat.t(2) - dat.t(1);
 E_rated = dat.E_rated;
-P_pvp = dat.P_pvp;
+P_pvp = dat.P_pvp; 
 P_load = dat.P_load_sp;
 P_sun = P_pvp * dat.P_sun_1k;
 c_grid = dat.c_grid;
@@ -46,8 +46,8 @@ if nargin < 3
     anticip_var = 0;
 end
 
-% By default use the mean data, unless the user choose otherwise by giving 1 as
-% third input of the function
+% By default use the mean data, unless the user choose otherwise by giving
+% 1 as third input of the function
 if (anticip_var == 0)
     P_sun_fcst = repmat(prod_dmean,nb_days+1,1);
     P_load_fcst = repmat(cons_dmean,nb_days+1,1);
@@ -55,8 +55,8 @@ elseif (anticip_var == 1)
     P_sun_fcst = P_sun;
     P_load_fcst = P_load;
 else
-   %throw an error message,choose which data to use for the prediction horizon
-   % 0 for the average datas and 1 for the 
+   %throw an error message,choose which data to use for the prediction 
+   %horizon 0 for the average datas and 1 for the 
 end
 
 
@@ -73,7 +73,8 @@ Aineq_Pcurt_p = kron(eye(horiz),[0 0 1]);
 Aineq_Pcurt_n = -Aineq_Pcurt_p;
 Aineq_Psto_p = kron(tril(ones(horiz)),[0 dt 0]);
 Aineq_Psto_n = -Aineq_Psto_p;
-Aineq = Help_consAorBineq(horiz,Aineq_Pcurt_p,Aineq_Pcurt_n,Aineq_Psto_p,Aineq_Psto_n);
+Aineq = reArrangeMat(horiz,Aineq_Pcurt_p,Aineq_Pcurt_n,Aineq_Psto_p,...
+    Aineq_Psto_n);
 
 % Set Inequality (right hand) constraint
 Bineq2 = zeros(horiz,1);
@@ -89,7 +90,7 @@ options.Display = 'off';
 for i=1:nb_hr
     
     varr = c_grid(i:i+horiz-1);
-    flin = Help_consAorBineq(horiz,ones(horiz,1).*varr,zeros(horiz,1),...
+    flin = reArrangeMat(horiz,ones(horiz,1).*varr,zeros(horiz,1),...
         zeros(horiz,1))';
     
     % Set data that will be used in the optimisation
@@ -106,7 +107,7 @@ for i=1:nb_hr
     %Set Inequality (right hand) constraints
     Bineq3 = (E_sto_max - E_sto(i,1))*ones(horiz,1);
     Bineq4 = (-E_sto_min + E_sto(i,1))*ones(horiz,1);
-    Bineq(:,i) = Help_consAorBineq(horiz,Bineq1,Bineq2,Bineq3,Bineq4);
+    Bineq(:,i) = reArrangeMat(horiz,Bineq1,Bineq2,Bineq3,Bineq4);
     
     % Set equality (right hand side) constraints
     Beq(:,i) = P_load_hor - P_sun_hor;
@@ -116,7 +117,8 @@ for i=1:nb_hr
     ub = repmat([P_grid_max;val_bound;val_bound],[horiz,1]);
     
     % Resolve optimisation problem and store result
-    [U(:,i),~,flg(i)] = linprog(flin,Aineq,Bineq(:,i),Aeq,Beq(:,i),lb,ub,options);
+    [U(:,i),~,flg(i)] = linprog(flin,Aineq,Bineq(:,i),Aeq,Beq(:,i),lb,...
+        ub,options);
     
     P_grid(i)= U(1,i);
     P_sto(i) = U(2,i);
