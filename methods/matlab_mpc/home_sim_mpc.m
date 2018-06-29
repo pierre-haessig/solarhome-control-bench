@@ -2,7 +2,7 @@ function [stats,traj] = home_sim_mpc(dat,horiz,anticip_var)
 %**************************************************************************
 %% HOME_SIM_MPC Simulate the solar home with MPC control
 % Version: 1.1
-% Required functions: reArrangeMat()
+% Required functions: interleave_mat()
 % Inputs: 
 %            dat: Data structure, from load_data;
 %            horiz : Prediction Horizon in hours 
@@ -55,8 +55,7 @@ elseif (anticip_var == 1)
     P_sun_fcst = P_sun;
     P_load_fcst = P_load;
 else
-   %throw an error message,choose which data to use for the prediction 
-   %horizon 0 for the average datas and 1 for the 
+   throw(MException('home_sim_mpc:bad_anticip_var','anticip_var should be 0 or 1')); 
 end
 
 
@@ -73,7 +72,7 @@ Aineq_Pcurt_p = kron(eye(horiz),[0 0 1]);
 Aineq_Pcurt_n = -Aineq_Pcurt_p;
 Aineq_Psto_p = kron(tril(ones(horiz)),[0 dt 0]);
 Aineq_Psto_n = -Aineq_Psto_p;
-Aineq = reArrangeMat(horiz,Aineq_Pcurt_p,Aineq_Pcurt_n,Aineq_Psto_p,...
+Aineq = interleave_mat(horiz,Aineq_Pcurt_p,Aineq_Pcurt_n,Aineq_Psto_p,...
     Aineq_Psto_n);
 
 % Set Inequality (right hand) constraint
@@ -90,7 +89,7 @@ options.Display = 'off';
 for i=1:nb_hr
     
     varr = c_grid(i:i+horiz-1);
-    flin = reArrangeMat(horiz,ones(horiz,1).*varr,zeros(horiz,1),...
+    flin = interleave_mat(horiz,ones(horiz,1).*varr,zeros(horiz,1),...
         zeros(horiz,1))';
     
     % Set data that will be used in the optimisation
@@ -107,7 +106,7 @@ for i=1:nb_hr
     %Set Inequality (right hand) constraints
     Bineq3 = (E_sto_max - E_sto(i,1))*ones(horiz,1);
     Bineq4 = (-E_sto_min + E_sto(i,1))*ones(horiz,1);
-    Bineq(:,i) = reArrangeMat(horiz,Bineq1,Bineq2,Bineq3,Bineq4);
+    Bineq(:,i) = interleave_mat(horiz,Bineq1,Bineq2,Bineq3,Bineq4);
     
     % Set equality (right hand side) constraints
     Beq(:,i) = P_load_hor - P_sun_hor;
@@ -130,7 +129,7 @@ P_pv = P_sun(1:nb_hr)' - P_curt;
 C_grid = P_grid.*c_grid(1:nb_hr)'*dt;
 
 % output stats: cumulated energy in kWh/day
-% (and cost in €/day)
+% (and cost in â‚¬/day)
 stats.P_sto   = mean(P_sto)*24;
 stats.P_load_sp = mean(P_load)*24;
 stats.P_shed = mean(P_shed)*24;
