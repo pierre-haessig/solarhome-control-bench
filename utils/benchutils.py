@@ -21,7 +21,7 @@ from warnings import warn
 from pathlib import Path
 
 
-def load_data(ndays=30, subset='test'):
+def load_data(ndays=30, subset='test', keep_date=False):
     '''Load input data for the solar home testbench
 
     Parameters
@@ -31,6 +31,9 @@ def load_data(ndays=30, subset='test'):
     subset : string, optional
         select the data extract to load: 'test' for the test set,
         'train' for the training set.
+    keep_dat : bool, optional
+        keeps the actual date as the index of the pandas DataFrame
+        instead of using a numerical time index in hours (default).
 
     Returns
     -------
@@ -83,6 +86,9 @@ def load_data(ndays=30, subset='test'):
     night = h < 6
     day = ~night
     c_grid = 0.10*night + 0.20*day
+
+    if keep_date:
+        t = df.index
 
     data = pd.DataFrame.from_dict({
         't': t,
