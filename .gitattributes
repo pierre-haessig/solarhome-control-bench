@@ -7,5 +7,5 @@
 *.jpg binary
 *.png binary
 *.pdf binary
-*.ipynb binary
+*.ipynb -text
 
