@@ -10,7 +10,7 @@ Comparison of the different energy management methods implemented in the
 [../methods](../methods) folder. This comparison is the core objective
 of the solar home benchmark.
 
-* Plots of trajetories on the first test days for each method:
+* Plots of trajectories on the first test days for each method:
   [Trajectory plots](Trajectory%20plots) folder
 
 ## 2. Sensitivity of benchmark results
