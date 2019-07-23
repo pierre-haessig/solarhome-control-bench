@@ -8,6 +8,22 @@ Pierre Haessig, IETR (AUTomatic Control team), CentraleSupélec
 
 ![solar home power flow model](images/solar_home.png)
 
+## Control methods
+
+This repository contains several examples for the energy management of the solar home,
+with a different method or in a different language (Python, Julia, Matlab).
+
+Each method lives in dedicated subdirectory of the [methods](methods) folder.
+It includes:
+* Rule-based control (Julia, Matlab and Python)
+* Model Predictive Control (MPC)
+* Stochastic Dynamic Programming
+* …
+
+## Comparison of control methods
+
+In the [comparison](comparison) folder.
+
 ## Solar and load data
 
 Solar production (from PV panels) and home consumption data is taken from the
@@ -15,7 +31,7 @@ Solar production (from PV panels) and home consumption data is taken from the
 by Ausgrid (distribution grid operator in the region near Sydney).
 
 A dataset extract used for this testbench is placed in the [data](data) subfolder.
-A description of this data extract is provided in [data/README.md](data/README.md). In particular, the 7 days starting at 2011-11-29 should be used for final testing:
+A description of this data extract is provided in [data/README.md](data/README.md). In particular, the 30 days starting at 2011-11-29 should be used for final testing:
 
 ![2011-11-29 week plot](data/data_week_2011-11-29.png)
 

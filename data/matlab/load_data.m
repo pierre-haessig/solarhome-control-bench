@@ -1,5 +1,7 @@
 % HOWTO load solar home testbench data in Matlab (tested with R2017b)
 % Pierre Haessig, January 2018
+% TODO 2019-07: clarify the status of this script agains the one utils
+% (which do not include the plot) → remove it?
 
 %% Main data file
 

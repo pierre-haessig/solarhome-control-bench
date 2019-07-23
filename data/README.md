@@ -15,12 +15,8 @@ For the solarhome benchmark, I've selected year 2011-2012 for "Customer 12" (out
 
 ## How to load this data
 
-You can take a look in the subfolders for your language of choice.
-Loading scripts are currently provided for:
-
-* [Matlab](matlab) (should work with Octave by adjusting the call to `csvread`)
-
-You can also look inside the folder of each [control methods](../methods).
+Loading functions or modules are available in the [utils](../utils) folder
+(cf. README there).
 
 ## Data description
 
@@ -29,7 +25,7 @@ Global statistics:
 * Consumption: avg 0.7 kW, max 4.0 kW. Yearly total of 5 900 kWh/yr
 * PV max 0.9 kW (1.04 kW capacity\*). Yield of 1250 kWh/yr/kWc.
 
-\*Notice: for the benchmark, the PV capacity is upscaled to 3 kWp by applying a 3/1.04 scaling factor.
+*Notice: for the benchmark, the PV capacity is upscaled to 4 kWp by applying a 4/1.04 scaling factor.*
 
 Here is the daily pattern (mean, 25%-75% and 05%-95% quantile intervals, at each hour of the day) for load and production over the year:
 
