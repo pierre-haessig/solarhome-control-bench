@@ -1,2 +1,2 @@
 control method,E_rated,P_pvp,P_grid_max
-Python_rule-based,8.000,4.000,3.000
+Julia_rule-based,8.000,4.000,3.000

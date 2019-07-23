@@ -1,23 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-""" Utilities for the solarhome testbench
+""" Utilities for the solar home testbench
 
-Load and data files:
+Features:
+* load solar home testbench data: `load_data`
+* compute/display statistics of a simulation: `compute_stats`, `pprint_stats`
+* save/reload simulation results: `load_results`, `save_results`
+* plot simulation trajectories: `plot_traj`
 
-* test data inputs: `load_data`
-* simulation results: `load_results`, `save_results`
-
-Misc:
-
-* pretty print simulatio statistics: s`pprint_stats`
-
-Pierre Haessig — May 2017
+Pierre Haessig — July 2019
 """
 
 import numpy as np
 import pandas as pd
 from warnings import warn
-
 from pathlib import Path
 
 
@@ -38,8 +34,9 @@ def load_data(ndays=30, subset='test', keep_date=False):
     Returns
     -------
     params : dict of parameters, with keys
-        E_rated:   storage capacity (kWh)
-        P_pvp:     size of PV panels (kWp)
+        E_rated:    storage capacity (kWh)
+        P_pvp:      size of PV panels (kWp)
+        P_grid_max: subscribed grid power (kW)
     data : pandas DataFrame of time series data, with columns
         P_load_sp: house load set point (kW)
         P_sun_1k:  solar production potential of a 1kWp panel (kW/kWp)
@@ -48,8 +45,9 @@ def load_data(ndays=30, subset='test', keep_date=False):
     '''
     # Testbench parameters
     params = dict(
-        E_rated = 8,  # kWh
-        P_pvp = 4,  # kW
+        E_rated = 8.,  # kWh
+        P_pvp = 4.,  # kW
+        P_grid_max = 3. # kW
     )
 
     # Load data file
@@ -169,8 +167,9 @@ def save_results(name, params, stats, traj):
 
     # 1. Write metadata
     with open(meta_fname, 'w') as f:
-        f.write('control method,E_rated,P_pvp\n')
-        f.write('{},{:.3f},{:.3f}\n'.format(name, params['E_rated'], params['P_pvp']))
+        f.write('control method,E_rated,P_pvp,P_grid_max\n')
+        f.write('{},{:.3f},{:.3f},{:.3f}\n'.format(
+                name, params['E_rated'], params['P_pvp'], params['P_grid_max']))
 
     # 2. Write statistics
     with open(stat_fname, 'w', newline='\n') as f:
@@ -257,7 +256,7 @@ def pprint_stats(stats):
     P_curt:    {P_curt:5.2f} kWh/d
     P_pv:      {P_pv:5.2f} kWh/d
 
-    P_sto:     {P_sto:5.2} kWh/d
+    P_sto:     {P_sto:5.2f} kWh/d
 
     P_grid:    {P_grid:5.2f} kWh/d
     C_grid:    {C_grid:.3f} €/d
@@ -292,20 +291,20 @@ def plot_traj(traj, E_rated, show_P_sto=False):
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots(2, 1, figsize=(6, 3.5), sharex=True)
 
+    P_nl = traj.P_load_sp - traj.P_sun
+    P_gc = traj.P_grid-traj.P_curt
+
     dt = 0.5  # hours
-    t = np.arange(len(traj))*dt
+    t = np.arange(len(P_nl))*dt
     td = t/24
 
-    P_nl = traj.P_load_sp - traj.P_sun
-
     ax[0].plot(td, P_nl, label='load − sun',
-               color=(0.5,)*3)
+               color=(0.5, 0.5, 0.5))
     if show_P_sto:
         ax[0].plot(td, -traj.P_sto, label='sto (gen)',
                    color='tab:green', ls='-')
-    ax[0].plot(td, traj.P_grid-traj.P_curt, label='grid − curt',
+    ax[0].plot(td, P_gc, label='grid − curt',
                color='tab:red')
-    P_gc = traj.P_grid-traj.P_curt
 
     # highlight positive and negative areas
     ax[0].fill_between(td, P_gc, where=P_gc >= 0,
