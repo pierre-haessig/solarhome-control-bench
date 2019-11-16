@@ -15,3 +15,5 @@ Utilities are available in the following languages:
 
 To learn how to use these utilities, look at an example [control methods](../methods)
 with the language of your choice.
+In particular, rule-based control examples (in Julia/Matlab/Python)
+are the simplest to start with.
