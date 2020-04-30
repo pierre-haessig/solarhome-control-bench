@@ -5,7 +5,6 @@ July 2019
 ## Control
 
 Consolidation of results:
-* update the determistic optim Julia notebook to use the new `Benchutils` module
 * investigate why optimized rule-based control gives a rather superior performance
   than SDP (from which is was inspired): control discretization step too big?
 
