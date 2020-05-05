@@ -1,5 +1,9 @@
 # Changes in the Solar home control bench
 
+## 05 May 2020
+
+Implementation of MPC in Julia done 
+
 ## 30 April 2020
 
 Update of the determistic optimization Julia notebook

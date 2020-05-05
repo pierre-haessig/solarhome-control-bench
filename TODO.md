@@ -9,8 +9,7 @@ Consolidation of results:
   than SDP (from which is was inspired): control discretization step too big?
 
 New:
-* finish the draft MPC Julia notebook (after updating determistic optim Julia first)
-* create a Stochastic MPC Julia notebook
+* create a Stochastic (tree-based) MPC Julia notebook
 * evaluate performance uncertainty with bootstrapped inputs
 
 ## Comparison
