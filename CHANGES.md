@@ -1,8 +1,12 @@
 # Changes in the Solar home control bench
 
+## 12 May 2020
+
+Implementation of OLFC in Julia done 
+
 ## 05 May 2020
 
-Implementation of MPC in Julia done 
+Implementation of MPC in Julia done
 
 ## 30 April 2020
 

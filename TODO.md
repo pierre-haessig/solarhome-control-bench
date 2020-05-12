@@ -13,6 +13,8 @@ New:
 * evaluate performance uncertainty with bootstrapped inputs
 
 ## Comparison
+
+* update the Comparison Python notebook with Julia MPC and OLFC
 * update the Comparison Python notebook to latest `benchutils` functions
 
 ## Sizing
